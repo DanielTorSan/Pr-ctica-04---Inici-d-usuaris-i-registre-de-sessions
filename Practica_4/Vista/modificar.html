@@ -1,0 +1,32 @@
+<!-- Daniel Torres Sanchez -->
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modificar Article</title>
+    <link rel="stylesheet" href="../Estils/estils.css">
+</head>
+<body>
+    <div class="container">
+        <div class="principalBox">
+            <h1>Modificar Article</h1>
+            <form method="POST" action="../index.php" class="box">
+                <input type="hidden" name="accio" value="modificar">
+                
+                <label for="dni">DNI de l'article a modificar:</label>
+                <input type="text" name="dni" id="dni" required><br>
+
+                <label for="cos">Nou Cos:</label>
+                <input type="text" name="cos" id="cos" required><br>
+
+                <label for="titol">Nou Títol:</label>
+                <input type="text" name="titol" id="titol" required><br>
+
+                <input type="submit" value="Modificar Article" class="submit-button">
+            </form>
+            <a href="../index.php">Tornar a l'Inici</a>
+        </div>
+    </div>
+</body>
+</html>

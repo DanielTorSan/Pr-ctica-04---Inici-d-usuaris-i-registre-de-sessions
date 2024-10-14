@@ -1,0 +1,28 @@
+<!-- Daniel Torres Sanchez -->
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Esborrar Article</title>
+    <link rel="stylesheet" href="../Estils/estils.css">
+</head>
+<body>
+    <div class="container">
+        <div class="principalBox">
+            <h1>Esborrar Article</h1>
+
+            <form method="POST" action="../index.php" class="box">
+                <input type="hidden" name="accio" value="esborrar">
+                
+                <label for="dni">DNI:</label>
+                <input type="text" name="dni" id="dni" required><br>
+                
+                <input type="submit" value="Esborrar Article" class="submit-button">
+            </form>
+            
+            <a href="../index.php">Tornar a l'Inici</a>
+        </div>
+    </div>
+</body>
+</html>

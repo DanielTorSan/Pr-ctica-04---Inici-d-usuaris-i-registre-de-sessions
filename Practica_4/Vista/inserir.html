@@ -1,0 +1,33 @@
+<!-- Daniel Torres Sanchez -->
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inserir Article</title>
+    <link rel="stylesheet" href="../Estils/estils.css">
+</head>
+<body>
+    <div class="container">
+        <div class="principalBox">
+            <h1>Inserir Article</h1>
+            <form method="POST" action="../index.php" class="box">
+                <input type="hidden" name="accio" value="inserir">
+
+                <label for="dni">DNI:</label>
+                <input type="text" name="dni" id="dni" required><br>
+
+                <label for="cos">Cos:</label>
+                <input type="text" name="cos" id="cos" required><br>
+
+                <label for="titol">Títol:</label>
+                <input type="text" name="titol" id="titol" required><br>
+
+                <input type="submit" value="Inserir Article" class="submit-button">
+            </form>
+            <a href="../index.php">Tornar a l'Inici</a>
+        </div>
+    </div>
+</body>
+</html>
+
