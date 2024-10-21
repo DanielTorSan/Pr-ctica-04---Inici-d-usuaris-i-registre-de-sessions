@@ -1,81 +1,82 @@
-<!-- Daniel Torres Sanchez -->
+<!-- index.php -->
 <link rel="stylesheet" href="Estils/estils.css">
 
 <?php
-// Incloure la connexió a la base de dades
-include "db_connection.php";
+// Iniciar sesión
+session_start();
 
-// Incloure les funcions de gestió d'IDs
-include "id_manager.php";
+// Establecer el tiempo máximo de inactividad (20 segundos)
+$inactividad_maxima = 20; // segundos
 
-// Incloure les funcions separades
-include "inserir.php";
-include "modificar.php";
-include "esborrar.php";
-include "buscar_article.php";
-include "mostrar_detalls_article.php";
-
-// Incloure la vista principal
-include "Vista/index.html";
-
-// Afegir un enllaç a mostrar_articles.php
-echo "<h2><a href='mostrar_articles.php'>Mostrar Articles</a></h2>";
-
-// Processar les sol·licituds
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $accio = $_POST['accio'] ?? null;
-    $dni = $_POST['dni'] ?? null; // Obtenir el DNI de forma global
-
-    switch ($accio) {
-        case 'inserir':
-            $cos = $_POST['cos'];
-            $titol = $_POST['titol'];
-            
-            if (buscarArticle($pdo, $dni)) {
-                echo "<p>L'article amb DNI $dni ja existeix. No es pot inserir un nou article amb el mateix DNI.</p>";
-            } else {
-                inserirArticle($pdo, $dni, $cos, $titol);
-                $articleInsertat = buscarArticle($pdo, $dni); // Recuperar l'article inserit
-                mostrarDetallsArticle($articleInsertat); // Mostrar els detalls
-            }
-            break;
-
-        case 'modificar':
-            $nou_cos = $_POST['cos'];
-            $nou_titol = $_POST['titol'];
-
-            $article = buscarArticle($pdo, $dni);
-            if ($article) {
-                if ($article['cos'] === $nou_cos && $article['titol'] === $nou_titol) {
-                    echo "<p>No s'han detectat canvis. Els nous valors són iguals als existents.</p>";
-                } else {
-                    modificarArticle($pdo, $dni, $nou_cos, $nou_titol);
-                    $articleModificat = buscarArticle($pdo, $dni); // Recuperar l'article modificat
-                    mostrarDetallsArticle($articleModificat); // Mostrar els detalls
-                }
-            } else {
-                echo "<p>Article no trobat amb DNI $dni.</p>";
-            }
-            break;
-
-        case 'esborrar':
-            $article = buscarArticle($pdo, $dni);
-            if ($article) {
-                esborrarArticle($pdo, $dni);
-                echo "<p>Article esborrat correctament.</p>";
-            } else {
-                echo "<p>No s'ha trobat cap article amb el DNI $dni per esborrar.</p>";
-            }
-            break;
-
-        case 'mostrar':
-            $article = buscarArticle($pdo, $dni);
-            if ($article) {
-                mostrarDetallsArticle($article); // Mostrar els detalls
-            } else {
-                echo "<p>No s'ha trobat cap article amb el DNI $dni.</p>";
-            }
-            break;
+// Verificar si el usuario ha estado inactivo
+if (isset($_SESSION['last_activity'])) {
+    $inactividad = time() - $_SESSION['last_activity']; // Calcular tiempo de inactividad
+    if ($inactividad > $inactividad_maxima) {
+        // Si el usuario ha estado inactivo más de 20 segundos, destruir la sesión
+        session_unset();
+        session_destroy();
+        header("Location: index.php"); // Redireccionar después de destruir la sesión
+        exit();
     }
 }
+
+// Actualizar el tiempo de la última actividad
+$_SESSION['last_activity'] = time();
+
+// Habilitar el reporte de errores
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+// Incluir la conexión a la base de datos
+include "Controlador/db_connection.php"; // Verifica que esta ruta sea correcta
+include "Controlador/id_manager.php"; // Incluir id_manager.php para usar funciones de gestión de IDs
+
+// Verificar si el usuario está logueado
+$loggedIn = isset($_SESSION['user']) || isset($_COOKIE['user']);
+$usuario = $loggedIn ? ($_SESSION['user'] ?? $_COOKIE['user']) : null;
+
+if ($loggedIn) {
+    echo "<h1>Benvingut, " . htmlspecialchars($usuario) . "!</h1>";
+    echo "<p>Pots veure i editar els teus articles.</p>";
+    echo "<a href='Login/logout.php' class='button'>Tancar Sessió</a>"; // Botón para cerrar sesión
+} else {
+    echo "<h2>Ets un usuari anònim. Només pots veure els articles.</h2>";
+}
+
+// Consultar todos los artículos de la base de datos
+$stmt = $pdo->prepare("SELECT * FROM articles");
+$stmt->execute();
+$articles = $stmt->fetchAll();
 ?>
+
+<div class="container">
+    <h1>Llista d'articles</h1>
+    <div class="articles">
+        <?php foreach ($articles as $article): ?>
+            <div class="article">
+                <h2><?php echo htmlspecialchars($article['titol'] ?? 'Título no disponible'); ?></h2>
+                <p><?php echo htmlspecialchars($article['cos'] ?? 'Contenido no disponible'); ?></p>
+                
+                <!-- Si el usuario está logueado, mostrar las opciones de modificar o borrar -->
+                <?php if ($loggedIn): ?>
+                    <a href="Controlador/modificar.php?id=<?php echo htmlspecialchars($article['ID']); ?>" class="button">Modificar</a>
+                    <a href="Controlador/esborrar.php?id=<?php echo htmlspecialchars($article['ID']); ?>" class="button">Esborrar</a>
+                <?php endif; ?>
+            </div>
+            <hr>
+        <?php endforeach; ?>
+    </div>
+</div>
+
+<!-- Si el usuario no está logueado, mostrar los botones de login/registro -->
+<?php if (!$loggedIn): ?>
+    <div class="login-register">
+        <a href="Login/register.php" class="button">Registrar-se</a>
+        <a href="Login/login.php" class="button">Iniciar Sessió</a>
+    </div>
+<?php else: ?>
+    <!-- Si el usuario está logueado, permitir la inserción de artículos -->
+    <div class="insert-article">
+        <a href="Controlador/inserir.php" class="button">Inserir Article</a>
+    </div>
+<?php endif; ?>

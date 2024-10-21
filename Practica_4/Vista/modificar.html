@@ -11,11 +11,8 @@
     <div class="container">
         <div class="principalBox">
             <h1>Modificar Article</h1>
-            <form method="POST" action="../index.php" class="box">
-                <input type="hidden" name="accio" value="modificar">
-                
-                <label for="dni">DNI de l'article a modificar:</label>
-                <input type="text" name="dni" id="dni" required><br>
+            <form method="POST" action="modificar.php" class="box">
+                <input type="hidden" name="dni" value="<?php echo htmlspecialchars($_GET['dni'] ?? ''); ?>" required>
 
                 <label for="cos">Nou Cos:</label>
                 <input type="text" name="cos" id="cos" required><br>
