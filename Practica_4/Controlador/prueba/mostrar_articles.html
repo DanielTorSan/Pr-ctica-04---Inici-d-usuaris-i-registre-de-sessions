@@ -1,0 +1,54 @@
+<!-- Daniel Torres Sanchez -->
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mostrar Articles</title>
+    <style>
+        .article {
+            border: 1px solid #ccc; /* Borde alrededor de cada artículo */
+            padding: 10px; /* Espaciado interno */
+            margin: 10px 0; /* Margen entre artículos */
+            border-radius: 5px; /* Esquinas redondeadas */
+            background-color: #f9f9f9; /* Color de fondo suave */
+        }
+        .article h2 {
+            color: #333; /* Color del título */
+            margin-bottom: 5px; /* Margen debajo del título */
+        }
+        .article p {
+            color: #555; /* Color del cuerpo */
+        }
+        .pagination {
+            margin-top: 20px; /* Espacio arriba de la paginación */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="principalBox">
+            <h1>Articles</h1>
+            <div class="articles">
+                <!-- Aquí es carregaran els articles mitjançant PHP -->
+                <?php foreach ($articles as $article): ?>
+                    <div class="article"> <!-- Nova classe per a cada article -->
+                        <h2>Títol: <?php echo htmlspecialchars($article['titol']); ?></h2> <!-- Mostrar el títol -->
+                        <p><strong>Cos:</strong> <?php echo htmlspecialchars($article['cos']); ?></p> <!-- Mostrar el cos -->
+                    </div>
+                <?php endforeach; ?>
+            </div>
+            <div class="pagination">
+                <?php if ($page > 1): ?>
+                    <a href="?page=<?php echo $page - 1; ?>">Anterior</a>
+                <?php endif; ?>
+                <span>Pàgina <?php echo $page; ?> de <?php echo $totalPages; ?></span>
+                <?php if ($page < $totalPages): ?>
+                    <a href="?page=<?php echo $page + 1; ?>">Següent</a>
+                <?php endif; ?>
+            </div>
+            <a href="index.php">Tornar a l'Inici</a>
+        </div>
+    </div>
+</body>
+</html>

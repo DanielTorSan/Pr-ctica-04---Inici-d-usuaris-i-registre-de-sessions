@@ -2,18 +2,18 @@
 <?php
 session_start();
 
-// Destruir todas las variables de sesión
+// Destruir totes les variables de sessió
 session_unset();
 
-// Destruir la sesión
+// Destruir la sessió
 session_destroy();
 
-// Eliminar la cookie del usuario si existe
+// Eliminar la cookie de l'usuari si existeix
 if (isset($_COOKIE['user'])) {
-    setcookie('user', '', time() - 3600, '/'); // Expirar la cookie estableciendo el tiempo en el pasado
+    setcookie('user', '', time() - 3600, '/'); // Expirar la cookie establint el temps en el passat
 }
 
-// Redirigir a la página principal
+// Redirigir a la pàgina principal
 header("Location: ../index.php");
 exit();
 ?>

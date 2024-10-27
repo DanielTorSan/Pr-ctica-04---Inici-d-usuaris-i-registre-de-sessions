@@ -2,13 +2,13 @@
 <link rel="stylesheet" href="../Estils/estils.css">
 
 <?php
-// Iniciar sesión
+// Iniciar sessió
 session_start();
 
-// Incluir la conexión a la base de datos
+// Incloure la connexió a la base de dades
 include "../Controlador/db_connection.php";
 
-// Incluir PHPMailer
+// Incloure PHPMailer
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -16,11 +16,11 @@ require '../PHPMailer/Exception.php';
 require '../PHPMailer/PHPMailer.php';
 require '../PHPMailer/SMTP.php';
 
-// Función para enviar el correo con PHPMailer
+// Funció per enviar el correu amb PHPMailer
 function enviarCorreu($nomC, $emailC, $textC) {
     $mail = new PHPMailer(true);
     try {
-        // Configuración del servidor SMTP
+        // Configuració del servidor SMTP
         $mail->SMTPDebug = 0;
         $mail->isSMTP();
         $mail->Host       = 'smtp.gmail.com';
@@ -30,45 +30,45 @@ function enviarCorreu($nomC, $emailC, $textC) {
         $mail->SMTPSecure = 'tls';
         $mail->Port       = 587;
 
-        // Configuración de los destinatarios
+        // Configuració dels destinataris
         $mail->setFrom('d.torres2@sapalomera.cat', 'Dani');
-        $mail->addAddress($emailC); // Correo del destinatario
+        $mail->addAddress($emailC); // Correu del destinatari
 
-        // Contenido del correo
+        // Contingut del correu
         $mail->isHTML(true);
         $mail->Subject = 'Recuperar Contrasenya';
         $mail->Body    = 'Nom: '.$nomC.'<br/> Text: '.$textC;
 
-        // Enviar el correo
+        // Enviar el correu
         $mail->send();
-        echo 'Enviado correctamente';
+        echo 'Enviat correctament';
     } catch (Exception $e) {
-        echo "El correo no se ha enviado. Error: {$mail->ErrorInfo}";
+        echo "El correu no s'ha enviat. Error: {$mail->ErrorInfo}";
     }
 }
 
-// Inicializar mensaje de error
+// Inicialitzar missatge d'error
 $error_message = "";
 $success_message = "";
 
-// Si el formulario es enviado
+// Si el formulari és enviat
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email']);
 
-    // Verificar si el email existe en la base de datos
+    // Comprovar si el correu electrònic existeix a la base de dades
     $stmt = $pdo->prepare("SELECT * FROM usuaris WHERE email = ?");
     $stmt->execute([$email]);
     $user = $stmt->fetch();
 
     if ($user) {
-        // Generar un token único y una fecha de expiración
-        $token = bin2hex(random_bytes(50)); // Token aleatorio
-        $expiration = date('Y-m-d H:i:s', strtotime('+1 hour')); // 1 hora de expiración
+        // Generar un token únic i una data d'expiració
+        $token = bin2hex(random_bytes(50)); // Token aleatori
+        $expiration = date('Y-m-d H:i:s', strtotime('+1 hour')); // 1 hora d'expiració
 
-        // Actualizar el usuario con el token y la expiración
+        // Actualitzar l'usuari amb el token i l'expiració
         $updateStmt = $pdo->prepare("UPDATE usuaris SET reset_token = ?, reset_expiration = ? WHERE email = ?");
         if ($updateStmt->execute([$token, $expiration, $email])) {
-            // Enviar correo
+            // Enviar correu
             $resetLink = "http://localhost/Practiques/UF1/Practica_4/Login/reset_password.php?token=" . $token;
             enviarCorreu($user['username'], $email, "Fes clic aquí per restablir la teva contrasenya: <a href='$resetLink'>$resetLink</a>");
             $success_message = "S'han enviat les instruccions a la teva adreça de correu.";

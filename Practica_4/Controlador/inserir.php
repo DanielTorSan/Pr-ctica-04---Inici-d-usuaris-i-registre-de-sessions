@@ -2,41 +2,48 @@
 <link rel="stylesheet" href="../Estils/estils.css">
 
 <?php
-// Incluir la conexión a la base de datos
+// Incloure la connexió a la base de dades i el fitxer de gestió d'IDs
 include "db_connection.php";
+include "id_manager.php";
 
-// Habilitar el reporte de errores
+// Habilitar el reporte d'errors
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Verificar si se ha enviado una solicitud POST
+// Verificar si s'ha enviat una sol·licitud POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Obtener los datos del formulario
+    // Obtenir les dades del formulari
     $dni = $_POST['dni'] ?? null;
     $cos = $_POST['cos'] ?? null;
     $titol = $_POST['titol'] ?? null;
 
-    // Validar que todos los campos estén presentes
+    // Validar que tots els camps estiguin presents
     if ($dni && $cos && $titol) {
         try {
-            // Preparar la consulta de inserción
-            $stmt = $pdo->prepare("INSERT INTO articles (dni, cos, titol) VALUES (?, ?, ?)");
-            $stmt->execute([$dni, $cos, $titol]);
+            // Obtenir el següent ID disponible
+            $nouID = obtenirIDMinim($pdo);
 
-            // Confirmación de inserción
-            echo "<p>Article inserit correctament!</p>";
+            // Preparar la consulta d'inserció amb el nou ID
+            $stmt = $pdo->prepare("INSERT INTO articles (ID, dni, cos, titol) VALUES (?, ?, ?, ?)");
+            $stmt->execute([$nouID, $dni, $cos, $titol]);
+
+            // Reajustar els IDs després de la inserció
+            reajustarIDs($pdo);
+
+            // Confirmació d'inserció
+            echo "<p>Article inserit correctament amb ID $nouID!</p>";
             echo "<a href='../index.php'>Tornar a l'inici</a>";
 
         } catch (PDOException $e) {
-            // Mostrar error en caso de fallo
+            // Mostrar error en cas de fallada
             echo "<p>Error en inserir l'article: " . $e->getMessage() . "</p>";
         }
     } else {
-        // Si faltan campos, mostrar un mensaje de error
+        // Si falten camps, mostrar un missatge d'error
         echo "<p>Tots els camps són obligatoris!</p>";
     }
 } else {
-    // Si no es una solicitud POST, redirigir al formulario
+    // Si no és una sol·licitud POST, redirigir al formulari
     header("Location: ../Vista/inserir.html");
     exit;
 }

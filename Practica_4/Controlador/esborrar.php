@@ -1,31 +1,31 @@
-<!-- esborrar.php -->
+<!-- Daniel Torres Sanchez -->
 <?php
 session_start();
 
-// Incluir la conexión a la base de datos y las funciones de id_manager
-include "../Controlador/db_connection.php"; // Verifica que esta ruta sea correcta
-include "../Controlador/id_manager.php"; // Incluir id_manager.php para usar funciones de gestión de IDs
+// Incloure la connexió a la base de dades i les funcions de gestió d'IDs
+include "../Controlador/db_connection.php"; // Verifica que aquesta ruta sigui correcta
+include "../Controlador/id_manager.php"; // Incloure id_manager.php per utilitzar funcions de gestió d'IDs
 
-// Verificar si se ha pasado un ID
+// Comprovar si s'ha passat un ID
 if (isset($_GET['id'])) {
     $id = (int)$_GET['id'];
 
-    // Preparar y ejecutar la consulta para eliminar el artículo
+    // Preparar i executar la consulta per esborrar l'article
     $stmt = $pdo->prepare("DELETE FROM articles WHERE ID = :id");
     $stmt->bindParam(':id', $id);
     
-    // Ejecutar la consulta
+    // Executar la consulta
     if ($stmt->execute()) {
-        // Llamar a la función para reajustar los IDs después de la eliminación
+        // Cridar a la funció per reajustar els IDs després de l'eliminació
         reajustarIDs($pdo);
-        // Mensaje de éxito
+        // Missatge d'èxit
         echo "<p>Article esborrat correctament.</p>";
     } else {
-        // Mensaje de error si no se pudo borrar
+        // Missatge d'error si no es va poder esborrar
         echo "<p>No s'ha pogut esborrar l'article amb ID: $id</p>";
     }
 
-    // Redirigir a la página de índice después de borrar
+    // Redirigir a la pàgina d'índex després d'esborrar
     header("Location: ../index.php");
     exit();
 } else {

@@ -11,10 +11,14 @@ include "../Controlador/db_connection.php";
 // Inicialitzar missatge d'error
 $error_message = "";
 
+// Inicialitzar la variable de l'usuari per omplir el formulari
+$usuari = isset($_COOKIE['user']) ? $_COOKIE['user'] : '';
+
 // Si el formulari és enviat
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username']);
     $password = $_POST['password'];
+    $rememberMe = isset($_POST['remember']); // Comprovar si s'ha seleccionat "Recorda'm"
 
     // Buscar l'usuari a la base de dades
     $stmt = $pdo->prepare("SELECT * FROM usuaris WHERE username = ?");
@@ -25,7 +29,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($user && password_verify($password, $user['password'])) {
         // Iniciar sessió i redirigir al inici
         $_SESSION['user'] = $username;
-        setcookie("user", $username, time() + 2400, "/"); // Cookie de sessió durant 40min
+
+        // Configurar la cookie si "Recorda'm" està seleccionat
+        if ($rememberMe) {
+            setcookie("user", $username, time() + 2400, "/"); // Cookie de sessió durant 40min
+        } else {
+            setcookie("user", "", time() - 3600, "/"); // Eliminar cookie si no s'ha seleccionat
+        }
+
         header("Location: ../index.php");
         exit(); // Assegurar-se que no s'executi més codi després de la redirecció
     } else {
@@ -51,10 +62,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
         <form action="login.php" method="POST">
             <label for="username">Nom d'usuari:</label>
-            <input type="text" name="username" required>
+            <input type="text" name="username" value="<?php echo htmlspecialchars($usuari); ?>" required> <!-- Omplir el camp d'usuari si existeix -->
             
             <label for="password">Contrasenya:</label>
             <input type="password" name="password" required>
+            
+            <div>
+                <input type="checkbox" name="remember" id="remember">
+                <label for="remember">Recorda'm</label>
+            </div>
             
             <button type="submit" class="submit-button">Iniciar Sessió</button>
         </form>

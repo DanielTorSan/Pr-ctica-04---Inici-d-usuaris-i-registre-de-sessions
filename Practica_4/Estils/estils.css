@@ -1,4 +1,4 @@
-/*Daniel Torres Sanchez*/
+/* Daniel Torres Sanchez */
 * {
     margin: 0;
     padding: 0;
@@ -16,7 +16,7 @@ body {
     padding: 20px;
 }
 
-/* Contenedor principal */
+/* Contenidor principal */
 .container {
     width: 100%;
     max-width: 700px;
@@ -26,32 +26,32 @@ body {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
-/* Caja principal para formularios */
+/* Caixa principal per a formularis */
 .principalBox {
     text-align: center;
 }
 
-/* Título principal */
+/* Títol principal */
 h1 {
     font-size: 2.5em;
     color: #4a90e2;
     margin-bottom: 20px;
 }
 
-/* Formularios */
+/* Formularis */
 form {
     display: flex;
     flex-direction: column;
     gap: 15px;
 }
 
-/* Etiquetas de los formularios */
+/* Etiquetes dels formularis */
 label {
     font-size: 1.2em;
     color: #555;
 }
 
-/* Entradas de texto */
+/* Entrades de text */
 input[type="text"], input[type="password"], textarea {
     padding: 10px;
     font-size: 1.1em;
@@ -66,7 +66,7 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
     outline: none;
 }
 
-/* Botones de enviar */
+/* Botons d'enviament */
 .submit-button {
     padding: 12px 20px;
     font-size: 1.2em;
@@ -82,12 +82,12 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
     background-color: #357ab8;
 }
 
-/* Enlaces estilizados como botones */
+/* Enllaços estilitzats com a botons */
 a {
     display: inline-block;
     padding: 12px 20px;
     margin-top: 20px;
-    margin-right: 10px; /* Espaciado entre los botones */
+    margin-right: 10px; /* Espaiat entre els botons */
     font-size: 1.2em;
     font-weight: bold;
     color: white;
@@ -101,7 +101,22 @@ a:hover {
     background-color: #357ab8;
 }
 
-/* Tablas */
+/* Paginació */
+.pagination {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 1.1em;
+}
+
+/* Informació de la pàgina actual (ex: "Pàgina 2 de 5") */
+.page-info {
+    display: inline-block;
+    margin: 0 10px;
+    font-weight: bold;
+    color: #4a90e2;
+}
+
+/* Taules */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -128,8 +143,7 @@ td {
     background-color: #f9f9f9;
 }
 
-
-/* Media queries para hacer que el diseño sea responsivo */
+/* Media queries per a fer que el disseny sigui responsiu */
 @media (max-width: 768px) {
     .container {
         padding: 20px;
