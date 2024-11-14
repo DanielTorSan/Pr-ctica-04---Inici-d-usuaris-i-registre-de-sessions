@@ -1,6 +1,6 @@
 -- Crear la base de datos
-CREATE DATABASE pt05_dani_torres;
-USE pt05_dani_torres;
+CREATE DATABASE pt04_dani_torres;
+USE pt04_dani_torres;
 
 -- Crear la tabla articles
 CREATE TABLE articles (
